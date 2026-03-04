@@ -1,7 +1,10 @@
-import { Home, Users, Settings, BarChart3, X } from 'lucide-react';
+import { Home, Users, Settings, BarChart3, X, LogOut } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
+    const { logout } = useAuth();
     return (
         <aside className={`
       fixed inset-y-0 left-0 z-30 w-64 bg-slate-900 text-white transform transition-transform duration-300 ease-in-out
@@ -23,6 +26,16 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 <SidebarLink to="/usuarios" icon={<Users size={20} />} label="Usuarios" onClick={() => setIsOpen(false)} />
                 {/* ...otros links */}
             </nav>
+
+            <nav className="flex-1 p-4 space-y-2">
+                <button
+                    onClick={logout}
+                    className="flex items-center gap-3 p-3 rounded-lg text-sm text-red-500 hover:text-red-700 font-medium pw-"
+                >
+                    <LogOut size={20} />
+                    <span>Cerrar Sesión</span>
+                </button>
+            </nav>
         </aside>
     );
 };
@@ -32,7 +45,7 @@ const SidebarLink = ({ to, icon, label, onClick }) => (
     <Link
         to={to}
         onClick={onClick}
-        className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800 transition-colors"
+        className={`flex items-center gap-3 p-3 rounded-lg  hover:bg-slate-800} transition-colors`}
     >
         {icon}
         <span>{label}</span>

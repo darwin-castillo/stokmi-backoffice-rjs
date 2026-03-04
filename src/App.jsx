@@ -3,37 +3,40 @@ import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import Login from './pages/Login';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import './App.css';
 
-function App() {
-  // Simulación de autenticación (Cámbialo a true para entrar al panel)
-  const isAuthenticated = false;
+const AppContent = () => {
+  const { user, loading } = useAuth();
+
+  if (loading) return <div className="h-screen flex items-center justify-center font-bold">Cargando...</div>;
 
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Ruta de Login (Sin Layout) */}
-        <Route path="/login" element={<Login />} />
+    <Routes>
+      <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
 
-        {/* Rutas Protegidas (Con Layout) */}
-        <Route
-          path="/*"
-          element={
-            isAuthenticated ? (
-              <Layout>
-                <Routes>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/usuarios" element={<Users />} />
-                  {/* Redirigir cualquier ruta desconocida al Dashboard */}
-                  <Route path="*" element={<Navigate to="/" />} />
-                </Routes>
-              </Layout>
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-      </Routes>
+      <Route path="/*" element={
+        user ? (
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/usuarios" element={<Users />} />
+            </Routes>
+          </Layout>
+        ) : (
+          <Navigate to="/login" />
+        )
+      } />
+    </Routes>
+  );
+};
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </BrowserRouter>
   );
 }

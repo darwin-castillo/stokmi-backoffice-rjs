@@ -1,8 +1,30 @@
 import { useState } from 'react';
 import { Lock, Mail, Eye, EyeOff } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { AlertCircle } from 'lucide-react';
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const { login } = useAuth();
+    const navigate = useNavigate();
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setError('');
+
+        const success = login(email, password);
+
+        if (success) {
+            navigate('/'); // Redirigir al dashboard
+        } else {
+            setError('Credenciales incorrectas. Intenta con admin@test.com / 123456');
+        }
+    };
 
     return (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
@@ -17,13 +39,19 @@ const Login = () => {
                     <p className="text-gray-500 mt-2">Ingresa tus credenciales para acceder</p>
                 </div>
 
-                <form className="space-y-6">
-                    {/* Email */}
+                <form className="space-y-6" onSubmit={handleSubmit}>
+                    {error && (
+                        <div className="bg-red-50 text-red-600 p-3 rounded-lg flex items-center gap-2 text-sm border border-red-100">
+                            <AlertCircle size={18} /> {error}
+                        </div>
+                    )}
                     <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
                         <div className="relative">
                             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                             <input
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 type="email"
                                 placeholder="admin@ejemplo.com"
                                 className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
@@ -37,12 +65,14 @@ const Login = () => {
                         <div className="relative">
                             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                             <input
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 type={showPassword ? "text" : "password"}
                                 placeholder="••••••••"
                                 className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
                             />
                             <button
-                                type="button"
+                                type="submit"
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors"
                             >
