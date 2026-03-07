@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { authService } from '../services/authService';
 
 const AuthContext = createContext();
 const API_URL = "http://localhost:3000/api/users/login"; //"https://minventory-express-mdb.vercel.app/api/users/login";
@@ -6,6 +7,7 @@ const API_URL = "http://localhost:3000/api/users/login"; //"https://minventory-e
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+
 
     useEffect(() => {
         const savedUser = localStorage.getItem('admin_user');
@@ -15,21 +17,10 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            console.log(JSON.stringify({ email, password }));
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
 
-                },
-                redirect: "follow",
-                body: JSON.stringify({ email, password }),
-            });
+            const data = await authService.login({ email: email, password: password })
 
-            const data = await response.json();
-
-            if (response.ok) {
+            if (data) {
                 // Asumiendo que la API devuelve el objeto del usuario o un token
                 setUser(data);
                 localStorage.setItem('admin_user', JSON.stringify(data));
@@ -39,7 +30,7 @@ export const AuthProvider = ({ children }) => {
                 return { success: false, message: data.message || "Error al iniciar sesión" };
             }
         } catch (error) {
-            return { success: false, message: "No se pudo conectar con el servidor" };
+            return { success: false, message: "Error: " + error };
         }
     };
 

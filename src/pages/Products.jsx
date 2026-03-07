@@ -1,9 +1,14 @@
 import { useProducts } from '../hooks/useProducts'; // Importamos nuestro nuevo Hook
 import { Package, Plus, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
+import { ProductModel } from '../models/ProductModel';
+import { AddProductModal } from '../components/AddProductModal';
+import { useStores } from '../hooks/useStores';
 
 const Products = () => {
 
-    const { products, loading, error, refresh } = useProducts();
+    const { products, loading, error, refresh, isModalOpen, setIsModalOpen } = useProducts();
+    const { stores, loadingStores, errorStores } = useStores();
+    console.log(stores.length > 0 ? "La tienda es " + stores[0].name : "No hay tiendas registradas");
 
     if (loading) return (
         <div className="h-96 flex items-center justify-center">
@@ -27,8 +32,11 @@ const Products = () => {
                     <button onClick={refresh} className="p-2 text-gray-400 hover:text-blue-600 transition-colors">
                         <RefreshCw size={20} />
                     </button>
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-xl font-bold">
-                        + Nuevo
+                    <button
+                        onClick={() => setIsModalOpen(true)} // ABRIR MODAL
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-blue-200"
+                    >
+                        <Plus size={20} /> Nuevo Producto
                     </button>
                 </div>
             </div>
@@ -41,8 +49,16 @@ const Products = () => {
                     </div>
                 ))}
             </div>
+            <AddProductModal
+                store={stores[0]._id}
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onRefresh={refresh}
+            />
         </div>
+
     );
 };
+//OLED LTPO de 6.8 pulgadas 12 GB o 16 GB de RAM Bateria capacidad de 5,850 mAh
 
 export default Products;

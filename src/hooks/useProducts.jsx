@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { productService } from '../services/productService';
+import { ProductModel } from '../models/ProductModel';
 
 export const useProducts = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false)
     const [error, setError] = useState(null);
 
     const fetchProducts = useCallback(async () => {
@@ -24,5 +26,5 @@ export const useProducts = () => {
         fetchProducts();
     }, [fetchProducts]);
 
-    return { products, loading, error, refresh: fetchProducts };
+    return { products, loading, error, isModalOpen, setIsModalOpen, refresh: fetchProducts };
 };
