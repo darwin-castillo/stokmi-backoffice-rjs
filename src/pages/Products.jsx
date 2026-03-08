@@ -49,12 +49,16 @@ const Products = () => {
                     </div>
                 ))}
             </div>
-            <AddProductModal
-                store={stores[0]._id}
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onRefresh={refresh}
-            />
+            {stores.length > 0 ? (
+                <AddProductModal
+                    store={stores[0]._id}
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    onRefresh={refresh}
+                />
+            ) :
+                <p className="text-center text-gray-600">No hay tiendas registradas</p>
+            }
         </div>
 
     );
