@@ -1,4 +1,4 @@
-# Mi Panel de Administración
+# Stokmi Admin
 
 Un panel de administración moderno, responsivo y robusto construido con React, Vite y Tailwind CSS. Esta aplicación sirve como un panel central para administrar diversas entidades como Usuarios, Productos y Tiendas, demostrando las mejores prácticas en la arquitectura de React y el diseño de UI/UX.
 
