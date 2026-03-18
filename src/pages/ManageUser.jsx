@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { userService } from '../services/userService';
-import { initialUserState } from '../models/userModel';
+import { initialUserState } from '../models/UserModel';
 import { ChevronLeft, Save, Loader2, UserPlus } from 'lucide-react';
 
 const ManageUser = () => {
