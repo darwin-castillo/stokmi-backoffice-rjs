@@ -3,8 +3,29 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { productService } from '../services/productService';
 import { initialProductState } from '../models/ProductModel';
 import { ChevronLeft, Save, Loader2, Package } from 'lucide-react';
+import { Button } from '../components/ui/Button';
+import { Input } from '../components/ui/Input';
+import { Card } from '../components/ui/Card';
+import { cn } from '../utils/cn';
 
-const ManageProduct = () => {
+const styles = {
+    loaderWrapper: "flex justify-center items-center h-64",
+    loaderIcon: "animate-spin text-blue-600",
+    wrapper: "max-w-3xl mx-auto space-y-6",
+    backBtn: "flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors",
+    headerGroup: "flex items-center gap-3",
+    iconBox: "p-3 bg-blue-600 rounded-2xl text-white",
+    title: "text-3xl font-bold text-gray-900",
+    subtitle: "text-gray-500",
+    formInner: "p-8 space-y-6",
+    errorAlert: "bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 flex items-center gap-2",
+    gridLayout: "grid grid-cols-1 gap-6",
+    label: "block text-sm font-bold text-gray-700 mb-2",
+    rowGrid: "grid grid-cols-1 md:grid-cols-2 gap-6",
+    textarea: "w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none resize-none",
+    footer: "bg-gray-50 p-8 flex justify-end gap-4 border-t border-gray-100",
+    discardBtn: "px-6 py-3 font-bold text-gray-500 hover:bg-gray-200 rounded-xl transition-all"
+}; const ManageProduct = () => {
     const { id } = useParams();
     const isEditMode = !!id;
     const [formData, setFormData] = useState(initialProductState);
@@ -63,119 +84,115 @@ const ManageProduct = () => {
 
     if (isLoading) {
         return (
-            <div className="flex justify-center items-center h-64">
-                <Loader2 className="animate-spin text-blue-600" size={40} />
+            <div className={styles.loaderWrapper}>
+                <Loader2 className={styles.loaderIcon} size={40} />
             </div>
         );
     }
 
     return (
-        <div className="max-w-3xl mx-auto space-y-6">
+        <div className={styles.wrapper}>
             {/* Cabecera / Breadcrumbs */}
             <button
                 onClick={() => navigate('/products')}
-                className="flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors"
+                className={styles.backBtn}
             >
                 <ChevronLeft size={20} /> Volver al inventario
             </button>
 
-            <div className="flex items-center gap-3">
-                <div className="p-3 bg-blue-600 rounded-2xl text-white">
+            <div className={styles.headerGroup}>
+                <div className={styles.iconBox}>
                     <Package size={28} />
                 </div>
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">{isEditMode ? 'Editar Producto' : 'Crear Nuevo Producto'}</h1>
-                    <p className="text-gray-500">{isEditMode ? 'Actualiza la información del producto.' : 'Completa la información para registrar el artículo en el sistema.'}</p>
+                    <h1 className={styles.title}>{isEditMode ? 'Editar Producto' : 'Crear Nuevo Producto'}</h1>
+                    <p className={styles.subtitle}>{isEditMode ? 'Actualiza la información del producto.' : 'Completa la información para registrar el artículo en el sistema.'}</p>
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="p-8 space-y-6">
+            <Card noPadding as="form" onSubmit={handleSubmit}>
+                <div className={styles.formInner}>
                     {error && (
-                        <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 flex items-center gap-2">
+                        <div className={styles.errorAlert}>
                             <span className="font-bold">!</span> {error}
                         </div>
                     )}
 
-                    <div className="grid grid-cols-1 gap-6">
+                    <div className={styles.gridLayout}>
                         {/* Nombre */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-2">Nombre del Producto</label>
-                            <input
+                            <label className={styles.label}>Nombre del Producto</label>
+                            <Input
                                 name="name"
                                 value={formData.name}
                                 onChange={handleChange}
                                 placeholder="Ej: Laptop Pro 14"
                                 required
-                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                             />
                         </div>
 
                         {/* Fila: Precio y Stock */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className={styles.rowGrid}>
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Precio de Venta ($)</label>
-                                <input
+                                <label className={styles.label}>Precio de Venta ($)</label>
+                                <Input
                                     name="price"
                                     type="number"
                                     value={formData.price}
                                     onChange={handleChange}
                                     placeholder="0.00"
                                     required
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Stock Inicial</label>
-                                <input
+                                <label className={styles.label}>Stock Inicial</label>
+                                <Input
                                     name="stock"
                                     type="number"
                                     value={formData.stock}
                                     onChange={handleChange}
                                     placeholder="Cantidad en almacén"
                                     required
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
                                 />
                             </div>
                         </div>
 
                         {/* Descripción */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-2">Descripción del Producto</label>
+                            <label className={styles.label}>Descripción del Producto</label>
                             <textarea
                                 name="description"
                                 value={formData.description}
                                 onChange={handleChange}
                                 rows="4"
                                 placeholder="Escribe los detalles técnicos o comerciales..."
-                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+                                className={styles.textarea}
                             />
                         </div>
                     </div>
                 </div>
 
                 {/* Footer del Formulario */}
-                <div className="bg-gray-50 p-8 flex justify-end gap-4 border-t border-gray-100">
+                <div className={styles.footer}>
                     <button
                         type="button"
                         onClick={() => navigate('/products')}
-                        className="px-6 py-3 font-bold text-gray-500 hover:bg-gray-200 rounded-xl transition-all"
+                        className={styles.discardBtn}
                     >
                         Descartar
                     </button>
-                    <button
+                    <Button
                         type="submit"
                         disabled={isSubmitting}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-blue-200 transition-all disabled:bg-blue-300"
                     >
                         {isSubmitting ? (
                             <Loader2 className="animate-spin" size={20} />
                         ) : (
                             <><Save size={20} /> {isEditMode ? 'Actualizar Producto' : 'Registrar Producto'}</>
                         )}
-                    </button>
+                    </Button>
                 </div>
-            </form>
+            </Card>
         </div>
     );
 };

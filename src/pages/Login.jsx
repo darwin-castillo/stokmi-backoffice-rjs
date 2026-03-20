@@ -1,8 +1,33 @@
 import { useState } from 'react';
-import { Lock, Mail, Eye, EyeOff } from 'lucide-react';
+import { Lock, Mail, Eye, EyeOff, AlertCircle, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { AlertCircle, Loader2 } from 'lucide-react';
+import { Button } from '../components/ui/Button';
+import { Input } from '../components/ui/Input';
+import { cn } from '../utils/cn';
+
+const styles = {
+    wrapper: "min-h-screen bg-slate-50 flex items-center justify-center p-4",
+    card: "max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-100",
+    header: "text-center mb-10",
+    iconBox: "inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-xl mb-4 shadow-lg shadow-blue-200",
+    title: "text-3xl font-bold text-gray-900",
+    subtitle: "text-gray-500 mt-2",
+    form: "space-y-6",
+    errorAlert: "bg-red-50 text-red-600 p-3 rounded-lg flex items-center gap-2 text-sm border border-red-100",
+    label: "block text-sm font-semibold text-gray-700 mb-2",
+    inputWrapper: "relative",
+    inputIcon: "absolute left-3 top-1/2 -translate-y-1/2 text-gray-400",
+    inputPl: "pl-10",
+    pwdInputPl: "pl-10 pr-12",
+    pwdBtn: "absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors",
+    footerRow: "flex items-center justify-between text-sm",
+    checkboxLabel: "flex items-center gap-2 cursor-pointer text-gray-600",
+    checkbox: "rounded border-gray-300 text-blue-600 focus:ring-blue-500",
+    linkText: "text-blue-600 font-semibold hover:underline",
+    btnLabel: "w-full py-3",
+    bottomText: "text-center text-gray-500 text-sm mt-8"
+};
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -30,84 +55,83 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-            <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+        <div className={styles.wrapper}>
+            <div className={styles.card}>
 
                 {/* Logo / Header */}
-                <div className="text-center mb-10">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-xl mb-4 shadow-lg shadow-blue-200">
+                <div className={styles.header}>
+                    <div className={styles.iconBox}>
                         <Lock className="text-white" size={32} />
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-900">Bienvenido</h1>
-                    <p className="text-gray-500 mt-2">Ingresa tus credenciales para acceder</p>
+                    <h1 className={styles.title}>Bienvenido</h1>
+                    <p className={styles.subtitle}>Ingresa tus credenciales para acceder</p>
                 </div>
 
-                <form className="space-y-6" onSubmit={handleSubmit}>
+                <form className={styles.form} onSubmit={handleSubmit}>
                     {error && (
-                        <div className="bg-red-50 text-red-600 p-3 rounded-lg flex items-center gap-2 text-sm border border-red-100">
+                        <div className={styles.errorAlert}>
                             <AlertCircle size={18} /> {error}
                         </div>
                     )}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-                        <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                            <input
+                        <label className={styles.label}>Email</label>
+                        <div className={styles.inputWrapper}>
+                            <Mail className={styles.inputIcon} size={20} />
+                            <Input
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 type="email"
                                 placeholder="admin@ejemplo.com"
-                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                                className={styles.inputPl}
                             />
                         </div>
                     </div>
 
                     {/* Password */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Contraseña</label>
-                        <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                            <input
+                        <label className={styles.label}>Contraseña</label>
+                        <div className={styles.inputWrapper}>
+                            <Lock className={styles.inputIcon} size={20} />
+                            <Input
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 type={showPassword ? "text" : "password"}
                                 placeholder="••••••••"
-                                className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                                className={styles.pwdInputPl}
                             />
                             <button
-                                type="submit"
+                                type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors"
+                                className={styles.pwdBtn}
                             >
                                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                             </button>
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-sm">
-                        <label className="flex items-center gap-2 cursor-pointer text-gray-600">
-                            <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                    <div className={styles.footerRow}>
+                        <label className={styles.checkboxLabel}>
+                            <input type="checkbox" className={styles.checkbox} />
                             Recordarme
                         </label>
-                        <a href="#" className="text-blue-600 font-semibold hover:underline">¿Olvidaste tu contraseña?</a>
+                        <a href="#" className={styles.linkText}>¿Olvidaste tu contraseña?</a>
                     </div>
 
-                    <button
+                    <Button
                         type="submit"
                         disabled={isSubmitting}
-                        className={`w-full flex justify-center items-center font-bold py-3 rounded-xl shadow-lg transition-all 
-          ${isSubmitting ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 active:scale-95 text-white'}`}
+                        className={styles.btnLabel}
                     >
                         {isSubmitting ? (
                             <Loader2 className="animate-spin" size={24} />
                         ) : (
                             "Iniciar Sesión"
                         )}
-                    </button>
+                    </Button>
                 </form>
 
-                <p className="text-center text-gray-500 text-sm mt-8">
-                    ¿No tienes una cuenta? <a href="#" className="text-blue-600 font-semibold hover:underline">Contacta al admin</a>
+                <p className={styles.bottomText}>
+                    ¿No tienes una cuenta? <a href="#" className={styles.linkText}>Contacta al admin</a>
                 </p>
             </div>
         </div>

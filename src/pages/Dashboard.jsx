@@ -3,6 +3,24 @@ import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid,
     Tooltip, ResponsiveContainer, PieChart, Pie, Cell
 } from 'recharts';
+import { cn } from '../utils/cn';
+
+const styles = {
+    wrapper: "space-y-8",
+    kpiGrid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6",
+    chartsGrid: "grid grid-cols-1 lg:grid-cols-3 gap-8",
+    chartArea: "lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm",
+    chartTitle: "text-lg font-bold text-gray-800 mb-4",
+    chartWrapper: "h-80 w-full",
+    chartPie: "bg-white p-6 rounded-2xl border border-gray-100 shadow-sm",
+    statCard: "bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between",
+    statTitle: "text-sm font-medium text-gray-500",
+    statValue: "text-2xl font-bold text-gray-800 mt-1",
+    statTrendBase: "text-xs font-bold mt-2 inline-block",
+    statTrendUp: "text-green-500",
+    statTrendDown: "text-red-500",
+    statIconWrapper: "p-3 bg-gray-50 rounded-xl"
+};
 
 // Datos de ejemplo para la gráfica de línea
 const dataSales = [
@@ -25,9 +43,9 @@ const COLORS = ['#3b82f6', '#10b981', '#f59e0b'];
 
 const Dashboard = () => {
     return (
-        <div className="space-y-8">
+        <div className={styles.wrapper}>
             {/* 1. SECCIÓN DE TARJETAS (KPIs) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className={styles.kpiGrid}>
                 <StatCard title="Ingresos" value="$12,450" icon={<DollarSign className="text-blue-600" />} trend="+12%" />
                 <StatCard title="Usuarios" value="1,240" icon={<Users className="text-emerald-600" />} trend="+5%" />
                 <StatCard title="Pedidos" value="456" icon={<ShoppingCart className="text-amber-600" />} trend="-2%" />
@@ -35,12 +53,12 @@ const Dashboard = () => {
             </div>
 
             {/* 2. SECCIÓN DE GRÁFICAS */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className={styles.chartsGrid}>
 
                 {/* Gráfica de Área (Ocupa 2 columnas) */}
-                <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4">Tendencia de Ventas</h3>
-                    <div className="h-80 w-full">
+                <div className={styles.chartArea}>
+                    <h3 className={styles.chartTitle}>Tendencia de Ventas</h3>
+                    <div className={styles.chartWrapper}>
                         <ResponsiveContainer width="100%" height="100%">
                             <AreaChart data={dataSales}>
                                 <defs>
@@ -60,9 +78,9 @@ const Dashboard = () => {
                 </div>
 
                 {/* Gráfica Circular (Ocupa 1 columna) */}
-                <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4">Fuentes de Tráfico</h3>
-                    <div className="h-80 w-full">
+                <div className={styles.chartPie}>
+                    <h3 className={styles.chartTitle}>Fuentes de Tráfico</h3>
+                    <div className={styles.chartWrapper}>
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie data={dataPie} innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
@@ -83,15 +101,15 @@ const Dashboard = () => {
 
 // Componente Interno para las Tarjetas
 const StatCard = ({ title, value, icon, trend }) => (
-    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+    <div className={styles.statCard}>
         <div>
-            <p className="text-sm font-medium text-gray-500">{title}</p>
-            <h3 className="text-2xl font-bold text-gray-800 mt-1">{value}</h3>
-            <span className={`text-xs font-bold mt-2 inline-block ${trend.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
+            <p className={styles.statTitle}>{title}</p>
+            <h3 className={styles.statValue}>{value}</h3>
+            <span className={cn(styles.statTrendBase, trend.startsWith('+') ? styles.statTrendUp : styles.statTrendDown)}>
                 {trend} vs mes pasado
             </span>
         </div>
-        <div className="p-3 bg-gray-50 rounded-xl">
+        <div className={styles.statIconWrapper}>
             {icon}
         </div>
     </div>
