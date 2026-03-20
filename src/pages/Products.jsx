@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useProducts } from '../hooks/useProducts'; 
+import { useProducts } from '../hooks/useProducts';
 import { Package, Plus, Loader2, AlertCircle, RefreshCw, LayoutGrid, List, Pencil } from 'lucide-react';
 import { useStores } from '../hooks/useStores';
 import { useNavigate } from 'react-router-dom';
@@ -34,7 +34,8 @@ const styles = {
     tableRow: "border-b border-gray-50 hover:bg-gray-50 transition-colors",
     td: "p-4 font-medium text-gray-800",
     tdPrice: "p-4 text-blue-600 font-bold",
-    tdActions: "p-4 flex gap-2 justify-end"
+    tdActions: "p-4 flex gap-2 justify-end",
+    stockBadge: "text-white  bg-red-600 px-2 py-0.5 rounded-md text-xs"
 };
 
 const Products = () => {
@@ -117,6 +118,7 @@ const Products = () => {
                             <tr className="bg-gray-50 border-b border-gray-100 text-sm">
                                 <th className={styles.th}>Nombre</th>
                                 <th className={styles.th}>Precio</th>
+                                <th className={styles.th}>Stock</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -124,6 +126,7 @@ const Products = () => {
                                 <tr key={product._id} className={styles.tableRow}>
                                     <td className={styles.td}>{product.name}</td>
                                     <td className={styles.tdPrice}>${product.price}</td>
+                                    <td className={styles.td}>{product.stock <= 0 ? <span className={styles.stockBadge}>Agotado</span> : product.stock}</td>
                                     <td className={styles.tdActions}>
                                         <button
                                             onClick={() => navigate(`/products/manage/${product._id}`)}
